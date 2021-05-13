@@ -1,0 +1,82 @@
+---
+title: "Housing on Mental Health Outcomes - SAMPLE"
+author: "Emily Riggleman"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(modelr)
+library(ggplot2)
+library(ggpubr)
+
+initial_data <- read.csv("ACT_Admission_to_Discharge_Outcomes__5_Year_Window.csv")
+```
+
+### Housing versus Mental Health Diagnosis
+
+```{r}
+plot_1 <- housing_data %>%
+  filter(Living.Situation.Homeless.at.Admission > 1) %>%
+  filter(!Mental.Health.Diagnosis == "All") %>%
+  ggplot(aes(Living.Situation.Homeless.at.Admission)) +
+  geom_freqpoly(aes(color=Mental.Health.Diagnosis), binwidth=35) + xlab("Homeless at Admission")
+
+plot_2 <- housing_data %>%
+  filter(Living.Situation.Unstably.Housed.at.Admission > 1) %>%
+  filter(!Mental.Health.Diagnosis == "All") %>%
+  ggplot(aes(Living.Situation.Unstably.Housed.at.Admission)) +
+  geom_freqpoly(aes(color=Mental.Health.Diagnosis), binwidth=35) + xlab("Unstable Housing at Admission")
+
+plot_3 <- housing_data %>%
+  filter(Living.Situation.Institution.at.Admission > 1) %>%
+  filter(!Mental.Health.Diagnosis == "All") %>%
+  ggplot(aes(Living.Situation.Institution.at.Admission)) +
+  geom_freqpoly(aes(color=Mental.Health.Diagnosis), binwidth=35)+ xlab("Institution at Admission")
+
+plot_4 <- housing_data %>%
+  filter(Living.Situation.Supported.Housing.at.Admission > 1) %>%
+  filter(!Mental.Health.Diagnosis == "All") %>%
+  ggplot(aes(Living.Situation.Supported.Housing.at.Admission)) +
+  geom_freqpoly(aes(color=Mental.Health.Diagnosis), binwidth=35) + xlab("Supported Housing at Admission")
+
+plot_5 <- housing_data %>%
+  filter(Living.Situation.Private.Residence.at.Admission > 1) %>%
+  filter(!Mental.Health.Diagnosis == "All") %>%
+  ggplot(aes(Living.Situation.Private.Residence.at.Admission)) +
+  geom_freqpoly(aes(color=Mental.Health.Diagnosis), binwidth=35) + theme_set(theme_gray(base_size = 10)) + xlab("Private Residence at Admission")
+
+ggarrange(plot_1, plot_2, plot_3, plot_4, plot_5, ncol=2, nrow=3)
+```
+
+- Describe what type of visualization you can use and why.
+
+Between categorical and continuous variables, a frequency polygraph can be used to visualize data. You can use this because it will show the distribution of values of the continuous variable, while also showing those distributions across the categorical variables, by overlaying each categorical variable based on the distribution.
+
+- Describe the patterns and relationships you observe. Could the identified patterns be due to coincidence (i.e. random chance)?
+
+In supported and homeless housing, schizophrenia is most likely, followed by bipolar disorder. What is interesting is that in unstable housing, depression is most likely, and schizophrenia is the only other recorded mental diagnosis. This is against what is expected, where more stressful housing situations result in more severe mental health diagnoses. However for unstable housing, it is more likely to be hospitalized for depression. 
+In private residences, depression is most likely as well, but schizophrenia is also considerably evident, but not at the same magnitude as supported housing. 
+It should be noted that there was considerably less of the population represented by the Institution housing status. This could be an indication of the success of institutions in keeping patients stable enough to avoid hospitalization. 
+It is unlikely that in supported and homeless housing that schizophrenia is most likely is by random chance. This is because in support housing, it would make sense that schizophrenia makes up a majority, as this is the most severe mental illness that will cause the most need for support in every day life. It is also more likely to be hospitalized if the schizophrenia is severe enough to need supported housing. Since most of these relationships are in-line with other observed patterns, it is unlikely that they are by random chance.  
+
+
+- Describe the relationship implied by the pattern? (e.g., positive or negative correlation)
+
+There is a relationship implied that in supported housing, institution, and homeless housing status, schizophrenia is most likely. In unstable and private residences, depression is most likely. 
+
+- Calculate the strength of the relationship implied by the pattern (e.g., correlation) 
+
+There is considerable strength in the relationships described above. The frequency graphs do not fluctuate between what is most likely, thus indicating that there is a strong correlation present.
+
+- Discuss what other variables might affect the relationship
+
+Other variables that affect these relationships could be relative frequency of each of the mental heath diagnoses across populations. For example, generally more depression occurs but at less severity, so there is less hospitalization. This compared to schizophrenia that occurs less often, but more often requires hospitalization. 
+
+- Discuss how the observed patterns support/reject your hypotheses or answer your questions.
+
+These observed patterns are very interesting. Basically, institutions, supported housing, and homeless status are most likely to be correlated with schizophrenia, that can be considered the most severe mental health diagnosis in this particular data set. While private residences and unstable housing are most likely to be correlated with depression. This is interesting because I was expecting unstable and homeless housing status to be correlated with the more severe mental health diagnoses. That said, it does make sense that institutions and supported housing are most likely to have patients admitted into the hospital for schizophrenia, since that diagnosis is the one most likely to get to the severity of needing support in housing. And once it gets to the severity of needing housing, that severity would correlate with increased need of hospitalizations.
+
+- Modeling
+
+Modeling was not used for the analysis of these two variables because mental health diagnosis is a categorical variable, of which the covariation between these would be difficult to express and represent as a model. 
